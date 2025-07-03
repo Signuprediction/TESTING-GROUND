@@ -822,13 +822,13 @@
             wavesurfer.on('ready', async () => {
                 const ac = wavesurfer.backend.ac;
                 const analyser = ac.createAnalyser();
-                analyser.fftSize = 32;
+                analyser.fftSize = 64; // Try 64 for smoother bars
                 const bufferLength = analyser.frequencyBinCount;
                 const dataArray = new Uint8Array(bufferLength);
 
-                // Connect analyzer properly
-                const originalGain = wavesurfer.backend.gainNode;
-                originalGain.connect(analyser);
+                // Proper connection
+                const source = ac.createMediaElementSource(wavesurfer.media);
+                source.connect(analyser);
                 analyser.connect(ac.destination);
 
                 if (ac.state === 'suspended') {
@@ -847,14 +847,15 @@
                     const barWidth = canvas.width / bufferLength;
 
                     for (let i = 0; i < bufferLength; i++) {
-                        const barHeight = ((dataArray[i] + 10) / 255) * canvas.height;
+                        const barHeight = (dataArray[i] / 255) * canvas.height;
                         const x = i * barWidth;
 
-                        ctx.fillStyle = '#38bdf8';
+                        ctx.fillStyle = '#38bdf8'; // Tailwind sky-400
                         ctx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight);
                     }
                 }
             });
+
         }
     </script>
 
