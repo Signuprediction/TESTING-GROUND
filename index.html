@@ -246,8 +246,8 @@
                     Order Now
                 </button>
                 <div class="mt-3 flex items-center space-x-2 fade-section">
-                    <button onclick="toggleWaveform('siklab')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
-                        🔊 Hear the Engine
+                    <div id="waveform-siklab" class="w-full h-20"></div>
+                    <button onclick="toggleSimpleWave('siklab')" class="bg-neutral-800 text-white px-3 py-1 rounded mt-2">🔊 Hear the Engine</button>
                     </button>
                     <canvas id="revpulse-siklab"
                             class="w-[150px] h-[60px] bg-black border border-neutral-700 rounded"
@@ -272,8 +272,8 @@
                 <p class="text-white font-semibold">Starting at ₱1.7M</p>
                 <button onclick="openOrderModal('lakbay')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">Order Now</button>
                 <div class="mt-3 flex items-center space-x-2 fade-section">
-                    <button onclick="toggleWaveform('lakbay')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
-                        🔊 Hear the Engine
+                    <div id="waveform-siklab" class="w-full h-20"></div>
+                    <button onclick="toggleSimpleWave('lakbay')" class="bg-neutral-800 text-white px-3 py-1 rounded mt-2">🔊 Hear the Engine</button>
                     </button>
                     <canvas id="revpulse-lakbay"
                             class="w-[150px] h-[60px] bg-black border border-neutral-700 rounded"
@@ -298,8 +298,8 @@
                 <p class="text-white font-semibold">Starting at ₱800K</p>
                 <button onclick="openOrderModal('bayan')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">Order Now</button>
                 <div class="mt-3 flex items-center space-x-2 fade-section">
-                    <button onclick="toggleWaveform('bayan')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
-                        🔊 Hear the Engine
+                    <div id="waveform-siklab" class="w-full h-20"></div>
+                    <button onclick="toggleSimpleWave('bayan')" class="bg-neutral-800 text-white px-3 py-1 rounded mt-2">🔊 Hear the Engine</button>
                     </button>
                     <canvas id="revpulse-bayan"
                             class="w-[150px] h-[60px] bg-black border border-neutral-700 rounded"
@@ -324,8 +324,8 @@
                 <p class="text-white font-semibold">Starting at ₱1.0M</p>
                 <button onclick="openOrderModal('ulap')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">Order Now</button>
                 <div class="mt-3 flex items-center space-x-2 fade-section">
-                    <button onclick="toggleWaveform('ulap')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
-                        🔊 Hear the Engine
+                    <div id="waveform-siklab" class="w-full h-20"></div>
+                    <button onclick="toggleSimpleWave('ulap')" class="bg-neutral-800 text-white px-3 py-1 rounded mt-2">🔊 Hear the Engine</button>
                     </button>
                     <canvas id="revpulse-ulap"
                             class="w-[150px] h-[60px] bg-black border border-neutral-700 rounded"
@@ -576,6 +576,7 @@
     </div>
 
     <script src="https://unpkg.com/wavesurfer.js"></script>
+    <script src="https://unpkg.com/@wavesurfer/visualizer"></script>
 
     <!-- Scripts -->
     <script>
@@ -759,17 +760,17 @@
             document.getElementById('modalImage1').src = data.images[0];
 
             document.getElementById('modalSpecs').innerHTML = `
-                        <p><strong>Range:</strong> ${data.range}</p>
-                        ${data.accel ? `<p><strong>0-100 km/h:</strong> ${data.accel}</p>` : ''}
-                        <p><strong>Drive Type:</strong> ${data.drive}</p>
-                        <p><strong>Suspension:</strong> ${data.specs.suspension}</p>
-                        <p><strong>Transmission:</strong> ${data.specs.transmission}</p>
-                        <p><strong>Tires:</strong> ${data.specs.tires}</p>
+                            <p><strong>Range:</strong> ${data.range}</p>
+                            ${data.accel ? `<p><strong>0-100 km/h:</strong> ${data.accel}</p>` : ''}
+                            <p><strong>Drive Type:</strong> ${data.drive}</p>
+                            <p><strong>Suspension:</strong> ${data.specs.suspension}</p>
+                            <p><strong>Transmission:</strong> ${data.specs.transmission}</p>
+                            <p><strong>Tires:</strong> ${data.specs.tires}</p>
 `;
 
             const featuresList = data.features.map(item => `<li>• ${item}</li>`).join('');
             document.getElementById('modalSpecs').innerHTML += `
-                        <ul class="mt-4 space-y-1 text-sm text-gray-400">${featuresList}</ul>
+                            <ul class="mt-4 space-y-1 text-sm text-gray-400">${featuresList}</ul>
 `;
 
             const priceDisplay = document.getElementById('modalPrice');
@@ -802,75 +803,36 @@
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }
-        const wavesurfers = {};
+        const simpleWaves = {};
 
-        function toggleWaveform(carId) {
-            const audioFile = `${carId}-sound.mp3`;
-            const canvas = document.getElementById(`revpulse-${carId}`);
-            const ctx = canvas.getContext('2d');
+        function toggleSimpleWave(carId) {
+            const containerId = `waveform-${carId}`;
+            const audioUrl = `${carId}-sound.mp3`;
 
-            // Stop others
-            Object.keys(wavesurfers).forEach(id => {
-                if (id !== carId && wavesurfers[id]?.isPlaying?.()) {
-                    wavesurfers[id].pause();
-                }
-            });
-
-            // If exists, toggle
-            if (wavesurfers[carId]) {
-                const ws = wavesurfers[carId];
+            if (simpleWaves[carId]) {
+                const ws = simpleWaves[carId];
                 ws.isPlaying() ? ws.pause() : ws.play();
                 return;
             }
 
-            // Create and load
-            const wavesurfer = WaveSurfer.create({
-                container: document.createElement('div'),
-                backend: 'WebAudio',
+            const waveform = WaveSurfer.create({
+                container: `#${containerId}`,
+                waveColor: '#38bdf8',
+                progressColor: '#0ea5e9',
+                height: 80,
+                barWidth: 3,
+                responsive: true,
+                plugins: [
+                    WaveSurfer.visualizer.create({
+                        waves: 64,
+                        color: '#38bdf8'
+                    })
+                ]
             });
 
-            wavesurfers[carId] = wavesurfer;
-            wavesurfer.load(audioFile);
-
-            wavesurfer.on('ready', async () => {
-                const ac = wavesurfer.backend.ac;
-                const sourceNode = wavesurfer.backend.bufferSource; // Internal source
-                const analyser = ac.createAnalyser();
-                analyser.fftSize = 64;
-                const bufferLength = analyser.frequencyBinCount;
-                const dataArray = new Uint8Array(bufferLength);
-
-                // Proper connection: gainNode → analyser → destination
-                wavesurfer.backend.setFilter(analyser); // ✅ This is the secret
-                analyser.connect(ac.destination);
-
-                // Set canvas dimensions to match styled size
-                canvas.width = canvas.clientWidth || 150;
-                canvas.height = canvas.clientHeight || 60;
-
-                if (ac.state === 'suspended') {
-                    await ac.resume();
-                }
-
-                wavesurfer.play();
-                draw();
-
-                function draw() {
-                    requestAnimationFrame(draw);
-                    analyser.getByteFrequencyData(dataArray);
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                    const barWidth = canvas.width / bufferLength;
-
-                    for (let i = 0; i < bufferLength; i++) {
-                        const barHeight = (dataArray[i] / 255) * canvas.height;
-                        const x = i * barWidth;
-
-                        ctx.fillStyle = '#38bdf8'; // Tailwind sky-400
-                        ctx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight);
-                    }
-                }
-            });
+            waveform.load(audioUrl);
+            waveform.on('ready', () => waveform.play());
+            simpleWaves[carId] = waveform;
         }
 
     </script>
