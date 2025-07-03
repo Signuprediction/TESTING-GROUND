@@ -246,7 +246,7 @@
             </div>
         </div>
         <!-- Rev Pulse -->
-        <div class="mt-4 flex items-center space-x-2">
+        <div class="fade-section mt-4 flex items-center space-x-2">
             <button onclick="toggleWaveform('siklab')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
                 🔊 Hear the Engine
             </button>
@@ -270,7 +270,7 @@
             </div>
         </div>
         <!-- Rev Pulse -->
-        <div class="mt-4 flex items-center space-x-2">
+        <div class="fade-section mt-4 flex items-center space-x-2">
             <button onclick="toggleWaveform('lakbay')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
                 🔊 Hear the Engine
             </button>
@@ -294,7 +294,7 @@
             </div>
         </div>
         <!-- Rev Pulse -->
-        <div class="mt-4 flex items-center space-x-2">
+        <div class="fade-section mt-4 flex items-center space-x-2">
             <button onclick="toggleWaveform('bayan')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
                 🔊 Hear the Engine
             </button>
@@ -797,6 +797,7 @@
         function toggleWaveform(carId) {
             const audioFile = `${carId}-sound.mp3`;
             const canvas = document.getElementById(`revpulse-${carId}`);
+            const ctx = canvas.getContext('2d');
 
             // Stop other playing sounds
             Object.keys(wavesurfers).forEach(id => {
@@ -805,6 +806,7 @@
                 }
             });
 
+            // If it exists, toggle play
             if (wavesurfers[carId]) {
                 const ws = wavesurfers[carId];
                 ws.isPlaying() ? ws.pause() : ws.play();
@@ -812,49 +814,50 @@
             }
 
             const wavesurfer = WaveSurfer.create({
-                container: document.createElement('div'), // no DOM output
+                container: document.createElement('div'), // invisible
                 backend: 'WebAudio',
             });
 
             wavesurfers[carId] = wavesurfer;
             wavesurfer.load(audioFile);
 
-            // Audio Analyzer setup
-            const ac = wavesurfer.backend.ac;
-            const analyser = ac.createAnalyser();
-            const source = wavesurfer.backend.bufferSource;
-            const ctx = canvas.getContext('2d');
-
-            analyser.fftSize = 32;
-            const bufferLength = analyser.frequencyBinCount;
-            const dataArray = new Uint8Array(bufferLength);
-
-            // Connect audio
             wavesurfer.on('ready', async () => {
-                const sourceNode = wavesurfer.backend.bufferSource;
-                sourceNode.connect(analyser);
+                const ac = wavesurfer.backend.ac;
+                const analyser = ac.createAnalyser();
+                analyser.fftSize = 32;
+                const bufferLength = analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+
+                // Connect analyzer properly
+                const originalGain = wavesurfer.backend.gainNode;
+                originalGain.connect(analyser);
                 analyser.connect(ac.destination);
 
-                if (ac.state === 'suspended') await ac.resume();
+                if (ac.state === 'suspended') {
+                    await ac.resume();
+                }
+
                 wavesurfer.play();
                 animate();
-            });
 
-            function animate() {
-                requestAnimationFrame(animate);
-                analyser.getByteFrequencyData(dataArray);
+                function animate() {
+                    requestAnimationFrame(animate);
+                    analyser.getByteFrequencyData(dataArray);
 
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                for (let i = 0; i < bufferLength; i++) {
-                    const barHeight = dataArray[i] / 255 * canvas.height;
-                    const x = i * 3;
-                    ctx.fillStyle = '#38bdf8';
-                    ctx.fillRect(x, canvas.height - barHeight, 2, barHeight);
+                    const barWidth = canvas.width / bufferLength;
+
+                    for (let i = 0; i < bufferLength; i++) {
+                        const barHeight = (dataArray[i] / 255) * canvas.height;
+                        const x = i * barWidth;
+
+                        ctx.fillStyle = '#38bdf8';
+                        ctx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight);
+                    }
                 }
-            }
+            });
         }
-
     </script>
 
 </body>
