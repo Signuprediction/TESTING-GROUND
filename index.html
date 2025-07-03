@@ -245,12 +245,12 @@
                 <button onclick="openOrderModal('siklab')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">Order Now</button>
             </div>
         </div>
-        <!-- Engine Sound Player with Waveform -->
-        <div class="mt-6 space-y-3">
-            <div id="waveform-siklab" class="w-full h-16 bg-neutral-800 rounded overflow-hidden"></div>
-            <button onclick="toggleWaveform('siklab')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-4 py-2 rounded-full text-sm font-medium">
+        <!-- Rev Pulse -->
+        <div class="mt-4 flex items-center space-x-2">
+            <button onclick="toggleWaveform('siklab')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
                 🔊 Hear the Engine
             </button>
+            <canvas id="revpulse-siklab" width="50" height="50" class="rounded"></canvas>
         </div>
 
         <!-- Lakbay -->
@@ -269,12 +269,12 @@
                 <button onclick="openOrderModal('lakbay')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">Order Now</button>
             </div>
         </div>
-        <!-- Engine Sound Player with Waveform -->
-        <div class="mt-6 space-y-3">
-            <div id="waveform-lakbay" class="w-full h-16 bg-neutral-800 rounded overflow-hidden"></div>
-            <button onclick="toggleWaveform('lakbay')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-4 py-2 rounded-full text-sm font-medium">
+        <!-- Rev Pulse -->
+        <div class="mt-4 flex items-center space-x-2">
+            <button onclick="toggleWaveform('lakbay')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
                 🔊 Hear the Engine
             </button>
+            <canvas id="revpulse-lakbay" width="50" height="50" class="rounded"></canvas>
         </div>
 
         <!-- Bayan -->
@@ -293,12 +293,12 @@
                 <button onclick="openOrderModal('bayan')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">Order Now</button>
             </div>
         </div>
-        <!-- Engine Sound Player with Waveform -->
-        <div class="mt-6 space-y-3">
-            <div id="waveform-bayan" class="w-full h-16 bg-neutral-800 rounded overflow-hidden"></div>
-            <button onclick="toggleWaveform('bayan')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-4 py-2 rounded-full text-sm font-medium">
+        <!-- Rev Pulse -->
+        <div class="mt-4 flex items-center space-x-2">
+            <button onclick="toggleWaveform('bayan')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
                 🔊 Hear the Engine
             </button>
+            <canvas id="revpulse-bayan" width="50" height="50" class="rounded"></canvas>
         </div>
 
         <!-- Ulap -->
@@ -317,12 +317,12 @@
                 <button onclick="openOrderModal('ulap')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">Order Now</button>
             </div>
         </div>
-        <!-- Engine Sound Player with Waveform -->
-        <div class="mt-6 space-y-3">
-            <div id="waveform-ulap" class="w-full h-16 bg-neutral-800 rounded overflow-hidden"></div>
-            <button onclick="toggleWaveform('ulap')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-4 py-2 rounded-full text-sm font-medium">
+        <!-- Rev Pulse -->
+        <div class="mt-4 flex items-center space-x-2">
+            <button onclick="toggleWaveform('ulap')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
                 🔊 Hear the Engine
             </button>
+            <canvas id="revpulse-ulap" width="50" height="50" class="rounded"></canvas>
         </div>
 
     </section>
@@ -795,7 +795,10 @@
         const wavesurfers = {};
 
         function toggleWaveform(carId) {
-            // Pause others
+            const audioFile = `${carId}-sound.mp3`;
+            const canvas = document.getElementById(`revpulse-${carId}`);
+
+            // Stop other playing sounds
             Object.keys(wavesurfers).forEach(id => {
                 if (id !== carId && wavesurfers[id].isPlaying()) {
                     wavesurfers[id].pause();
@@ -803,36 +806,55 @@
             });
 
             if (wavesurfers[carId]) {
-                // Toggle play/pause
-                wavesurfers[carId].isPlaying()
-                    ? wavesurfers[carId].pause()
-                    : wavesurfers[carId].play();
+                const ws = wavesurfers[carId];
+                ws.isPlaying() ? ws.pause() : ws.play();
                 return;
             }
 
-            const containerId = `#waveform-${carId}`;
-            const audioFile = `${carId}-sound.mp3`;
-
             const wavesurfer = WaveSurfer.create({
-                container: containerId,
-                waveColor: '#38bdf8',
-                progressColor: '#0ea5e9',
-                cursorColor: '#fff',
-                barWidth: 3,
-                height: 64,
-                responsive: true
+                container: document.createElement('div'), // no DOM output
+                backend: 'WebAudio',
             });
 
-            wavesurfer.load(audioFile);
             wavesurfers[carId] = wavesurfer;
+            wavesurfer.load(audioFile);
 
+            // Audio Analyzer setup
+            const ac = wavesurfer.backend.ac;
+            const analyser = ac.createAnalyser();
+            const source = wavesurfer.backend.bufferSource;
+            const ctx = canvas.getContext('2d');
+
+            analyser.fftSize = 32;
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            // Connect audio
             wavesurfer.on('ready', async () => {
-                if (wavesurfer.backend.ac.state === 'suspended') {
-                    await wavesurfer.backend.ac.resume();
-                }
+                const sourceNode = wavesurfer.backend.bufferSource;
+                sourceNode.connect(analyser);
+                analyser.connect(ac.destination);
+
+                if (ac.state === 'suspended') await ac.resume();
                 wavesurfer.play();
+                animate();
             });
+
+            function animate() {
+                requestAnimationFrame(animate);
+                analyser.getByteFrequencyData(dataArray);
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                for (let i = 0; i < bufferLength; i++) {
+                    const barHeight = dataArray[i] / 255 * canvas.height;
+                    const x = i * 3;
+                    ctx.fillStyle = '#38bdf8';
+                    ctx.fillRect(x, canvas.height - barHeight, 2, barHeight);
+                }
+            }
         }
+
     </script>
 
 </body>
