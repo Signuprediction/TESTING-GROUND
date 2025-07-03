@@ -242,17 +242,10 @@
                     <li>Toyota Gazoo Racing collaboration</li>
                 </ul>
                 <p class="text-white font-semibold">Starting at ₱2.1M</p>
-                <button onclick="openOrderModal('siklab')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">
-                    Order Now
+                <button onclick="openOrderModal('siklab')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">Order Now</button>
+                <button onclick="toggleEngineSound('siklab')" class="mt-2 bg-neutral-800 hover:bg-neutral-700 text-white font-medium px-4 py-2 rounded-full">
+                    🔊 Hear the Engine
                 </button>
-                <div class="mt-3 flex items-center space-x-2 fade-section">
-                    <div id="waveform-siklab" class="w-full h-20"></div>
-                    <button onclick="toggleSimpleWave('siklab')" class="bg-neutral-800 text-white px-3 py-1 rounded mt-2">🔊 Hear the Engine</button>
-                    <canvas id="revpulse-siklab"
-                            class="w-[150px] h-[60px] bg-black border border-neutral-700 rounded"
-                            width="150"
-                            height="60"></canvas>
-                </div>
             </div>
         </div>
 
@@ -270,14 +263,9 @@
                 </ul>
                 <p class="text-white font-semibold">Starting at ₱1.7M</p>
                 <button onclick="openOrderModal('lakbay')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">Order Now</button>
-                <div class="mt-3 flex items-center space-x-2 fade-section">
-                    <div id="waveform-lakbay" class="w-full h-20"></div>
-                    <button onclick="toggleSimpleWave('lakbay')" class="bg-neutral-800 text-white px-3 py-1 rounded mt-2">🔊 Hear the Engine</button>
-                    <canvas id="revpulse-lakbay"
-                            class="w-[150px] h-[60px] bg-black border border-neutral-700 rounded"
-                            width="150"
-                            height="60"></canvas>
-                </div>
+                <button onclick="toggleEngineSound('lakbay')" class="mt-2 bg-neutral-800 hover:bg-neutral-700 text-white font-medium px-4 py-2 rounded-full">
+                    🔊 Hear the Engine
+                </button>
             </div>
         </div>
 
@@ -295,14 +283,9 @@
                 </ul>
                 <p class="text-white font-semibold">Starting at ₱800K</p>
                 <button onclick="openOrderModal('bayan')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">Order Now</button>
-                <div class="mt-3 flex items-center space-x-2 fade-section">
-                    <div id="waveform-bayan" class="w-full h-20"></div>
-                    <button onclick="toggleSimpleWave('bayan')" class="bg-neutral-800 text-white px-3 py-1 rounded mt-2">🔊 Hear the Engine</button>
-                    <canvas id="revpulse-bayan"
-                            class="w-[150px] h-[60px] bg-black border border-neutral-700 rounded"
-                            width="150"
-                            height="60"></canvas>
-                </div>
+                <button onclick="toggleEngineSound('bayan')" class="mt-2 bg-neutral-800 hover:bg-neutral-700 text-white font-medium px-4 py-2 rounded-full">
+                    🔊 Hear the Engine
+                </button>
             </div>
         </div>
 
@@ -320,14 +303,9 @@
                 </ul>
                 <p class="text-white font-semibold">Starting at ₱1.0M</p>
                 <button onclick="openOrderModal('ulap')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">Order Now</button>
-                <div class="mt-3 flex items-center space-x-2 fade-section">
-                    <div id="waveform-ulap" class="w-full h-20"></div>
-                    <button onclick="toggleSimpleWave('ulap')" class="bg-neutral-800 text-white px-3 py-1 rounded mt-2">🔊 Hear the Engine</button>
-                    <canvas id="revpulse-ulap"
-                            class="w-[150px] h-[60px] bg-black border border-neutral-700 rounded"
-                            width="150"
-                            height="60"></canvas>
-                </div>
+                <button onclick="toggleEngineSound('ulap')" class="mt-2 bg-neutral-800 hover:bg-neutral-700 text-white font-medium px-4 py-2 rounded-full">
+                    🔊 Hear the Engine
+                </button>
             </div>
         </div>
 
@@ -571,9 +549,6 @@
         </div>
     </div>
 
-    <script src="https://unpkg.com/wavesurfer.js"></script>
-    <script src="https://unpkg.com/@wavesurfer/visualizer"></script>
-
     <!-- Scripts -->
     <script>
         let current = 0;
@@ -756,17 +731,17 @@
             document.getElementById('modalImage1').src = data.images[0];
 
             document.getElementById('modalSpecs').innerHTML = `
-                            <p><strong>Range:</strong> ${data.range}</p>
-                            ${data.accel ? `<p><strong>0-100 km/h:</strong> ${data.accel}</p>` : ''}
-                            <p><strong>Drive Type:</strong> ${data.drive}</p>
-                            <p><strong>Suspension:</strong> ${data.specs.suspension}</p>
-                            <p><strong>Transmission:</strong> ${data.specs.transmission}</p>
-                            <p><strong>Tires:</strong> ${data.specs.tires}</p>
+                <p><strong>Range:</strong> ${data.range}</p>
+                ${data.accel ? `<p><strong>0-100 km/h:</strong> ${data.accel}</p>` : ''}
+                <p><strong>Drive Type:</strong> ${data.drive}</p>
+                <p><strong>Suspension:</strong> ${data.specs.suspension}</p>
+                <p><strong>Transmission:</strong> ${data.specs.transmission}</p>
+                <p><strong>Tires:</strong> ${data.specs.tires}</p>
 `;
 
             const featuresList = data.features.map(item => `<li>• ${item}</li>`).join('');
             document.getElementById('modalSpecs').innerHTML += `
-                            <ul class="mt-4 space-y-1 text-sm text-gray-400">${featuresList}</ul>
+                <ul class="mt-4 space-y-1 text-sm text-gray-400">${featuresList}</ul>
 `;
 
             const priceDisplay = document.getElementById('modalPrice');
@@ -799,38 +774,21 @@
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }
-        const simpleWaves = {};
+        const engineSounds = {};
 
-        function toggleSimpleWave(carId) {
-            const containerId = `waveform-${carId}`;
-            const audioUrl = `${carId}-sound.mp3`;
-
-            if (simpleWaves[carId]) {
-                const ws = simpleWaves[carId];
-                ws.isPlaying() ? ws.pause() : ws.play();
-                return;
+        function toggleEngineSound(model) {
+            if (!engineSounds[model]) {
+                engineSounds[model] = new Audio(`${model}-sound.mp3`);
+                engineSounds[model].loop = false;
             }
 
-            const waveform = WaveSurfer.create({
-                container: `#${containerId}`,
-                waveColor: '#38bdf8',
-                progressColor: '#0ea5e9',
-                height: 80,
-                barWidth: 3,
-                responsive: true,
-                plugins: [
-                    WaveSurfer.visualizer.create({
-                        waves: 64,
-                        color: '#38bdf8'
-                    })
-                ]
-            });
-
-            waveform.load(audioUrl);
-            waveform.on('ready', () => waveform.play());
-            simpleWaves[carId] = waveform;
+            const audio = engineSounds[model];
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
         }
-
     </script>
 
 </body>
