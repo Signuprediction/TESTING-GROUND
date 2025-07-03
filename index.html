@@ -249,7 +249,10 @@
                     <button onclick="toggleWaveform('siklab')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
                         🔊 Hear the Engine
                     </button>
-                    <canvas id="revpulse-siklab" width="150" height="60" class="rounded bg-neutral-900 border border-neutral-700 h-16"></canvas>
+                    <canvas id="revpulse-siklab"
+                            class="w-[150px] h-[60px] bg-black border border-neutral-700 rounded"
+                            width="150"
+                            height="60"></canvas>
                 </div>
             </div>
         </div>
@@ -272,7 +275,10 @@
                     <button onclick="toggleWaveform('lakbay')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
                         🔊 Hear the Engine
                     </button>
-                    <canvas id="revpulse-lakbay" width="150" height="60" class="rounded bg-neutral-900 border border-neutral-700 h-16"></canvas>
+                    <canvas id="revpulse-lakbay"
+                            class="w-[150px] h-[60px] bg-black border border-neutral-700 rounded"
+                            width="150"
+                            height="60"></canvas>
                 </div>
             </div>
         </div>
@@ -295,7 +301,10 @@
                     <button onclick="toggleWaveform('bayan')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
                         🔊 Hear the Engine
                     </button>
-                    <canvas id="revpulse-bayan" width="150" height="60" class="rounded bg-neutral-900 border border-neutral-700 h-16"></canvas>
+                    <canvas id="revpulse-bayan"
+                            class="w-[150px] h-[60px] bg-black border border-neutral-700 rounded"
+                            width="150"
+                            height="60"></canvas>
                 </div>
             </div>
         </div>
@@ -318,7 +327,10 @@
                     <button onclick="toggleWaveform('ulap')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
                         🔊 Hear the Engine
                     </button>
-                    <canvas id="revpulse-ulap" width="150" height="60" class="rounded bg-neutral-900 border border-neutral-700 h-16"></canvas>
+                    <canvas id="revpulse-ulap"
+                            class="w-[150px] h-[60px] bg-black border border-neutral-700 rounded"
+                            width="150"
+                            height="60"></canvas>
                 </div>
             </div>
         </div>
@@ -833,8 +845,8 @@
                 analyser.connect(ac.destination);
 
                 // Set canvas dimensions to match styled size
-                canvas.width = canvas.clientWidth;
-                canvas.height = canvas.clientHeight;
+                canvas.width = canvas.clientWidth || 150;
+                canvas.height = canvas.clientHeight || 60;
 
                 if (ac.state === 'suspended') {
                     await ac.resume();
