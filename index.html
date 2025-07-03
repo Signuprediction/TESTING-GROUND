@@ -797,22 +797,23 @@
             const canvas = document.getElementById(`revpulse-${carId}`);
             const ctx = canvas.getContext('2d');
 
-            // Stop other playing sounds
+            // Stop others
             Object.keys(wavesurfers).forEach(id => {
-                if (id !== carId && wavesurfers[id].isPlaying()) {
+                if (id !== carId && wavesurfers[id]?.isPlaying?.()) {
                     wavesurfers[id].pause();
                 }
             });
 
-            // If it exists, toggle play
+            // If exists, toggle
             if (wavesurfers[carId]) {
                 const ws = wavesurfers[carId];
                 ws.isPlaying() ? ws.pause() : ws.play();
                 return;
             }
 
+            // Create and load
             const wavesurfer = WaveSurfer.create({
-                container: document.createElement('div'), // invisible
+                container: document.createElement('div'),
                 backend: 'WebAudio',
             });
 
@@ -821,27 +822,30 @@
 
             wavesurfer.on('ready', async () => {
                 const ac = wavesurfer.backend.ac;
+                const sourceNode = wavesurfer.backend.bufferSource; // Internal source
                 const analyser = ac.createAnalyser();
-                analyser.fftSize = 64; // Try 64 for smoother bars
+                analyser.fftSize = 64;
                 const bufferLength = analyser.frequencyBinCount;
                 const dataArray = new Uint8Array(bufferLength);
 
-                // Proper connection
-                const source = ac.createMediaElementSource(wavesurfer.media);
-                source.connect(analyser);
+                // Proper connection: gainNode → analyser → destination
+                wavesurfer.backend.setFilter(analyser); // ✅ This is the secret
                 analyser.connect(ac.destination);
+
+                // Set canvas dimensions to match styled size
+                canvas.width = canvas.clientWidth;
+                canvas.height = canvas.clientHeight;
 
                 if (ac.state === 'suspended') {
                     await ac.resume();
                 }
 
                 wavesurfer.play();
-                animate();
+                draw();
 
-                function animate() {
-                    requestAnimationFrame(animate);
+                function draw() {
+                    requestAnimationFrame(draw);
                     analyser.getByteFrequencyData(dataArray);
-
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                     const barWidth = canvas.width / bufferLength;
@@ -855,8 +859,8 @@
                     }
                 }
             });
-
         }
+
     </script>
 
 </body>
