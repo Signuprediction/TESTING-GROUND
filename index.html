@@ -242,15 +242,16 @@
                     <li>Toyota Gazoo Racing collaboration</li>
                 </ul>
                 <p class="text-white font-semibold">Starting at ₱2.1M</p>
-                <button onclick="openOrderModal('siklab')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">Order Now</button>
+                <button onclick="openOrderModal('siklab')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">
+                    Order Now
+                </button>
+                <div class="mt-3 flex items-center space-x-2 fade-section">
+                    <button onclick="toggleWaveform('siklab')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
+                        🔊 Hear the Engine
+                    </button>
+                    <canvas id="revpulse-siklab" width="150" height="60" class="rounded bg-neutral-900 border border-neutral-700 h-16"></canvas>
+                </div>
             </div>
-        </div>
-        <!-- Rev Pulse -->
-        <div class="fade-section mt-4 flex items-center space-x-2">
-            <button onclick="toggleWaveform('siklab')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
-                🔊 Hear the Engine
-            </button>
-            <canvas id="revpulse-siklab" width="150" height="50" class="rounded bg-neutral-900 border border-neutral-700"></canvas>
         </div>
 
         <!-- Lakbay -->
@@ -267,14 +268,13 @@
                 </ul>
                 <p class="text-white font-semibold">Starting at ₱1.7M</p>
                 <button onclick="openOrderModal('lakbay')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">Order Now</button>
+                <div class="mt-3 flex items-center space-x-2 fade-section">
+                    <button onclick="toggleWaveform('lakbay')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
+                        🔊 Hear the Engine
+                    </button>
+                    <canvas id="revpulse-lakbay" width="150" height="60" class="rounded bg-neutral-900 border border-neutral-700 h-16"></canvas>
+                </div>
             </div>
-        </div>
-        <!-- Rev Pulse -->
-        <div class="fade-section mt-4 flex items-center space-x-2">
-            <button onclick="toggleWaveform('lakbay')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
-                🔊 Hear the Engine
-            </button>
-            <canvas id="revpulse-lakbay" width="150" height="50" class="rounded bg-neutral-900 border border-neutral-700"></canvas>
         </div>
 
         <!-- Bayan -->
@@ -291,14 +291,13 @@
                 </ul>
                 <p class="text-white font-semibold">Starting at ₱800K</p>
                 <button onclick="openOrderModal('bayan')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">Order Now</button>
+                <div class="mt-3 flex items-center space-x-2 fade-section">
+                    <button onclick="toggleWaveform('bayan')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
+                        🔊 Hear the Engine
+                    </button>
+                    <canvas id="revpulse-bayan" width="150" height="60" class="rounded bg-neutral-900 border border-neutral-700 h-16"></canvas>
+                </div>
             </div>
-        </div>
-        <!-- Rev Pulse -->
-        <div class="fade-section mt-4 flex items-center space-x-2">
-            <button onclick="toggleWaveform('bayan')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
-                🔊 Hear the Engine
-            </button>
-            <canvas id="revpulse-bayan" width="150" height="50" class="rounded bg-neutral-900 border border-neutral-700"></canvas>
         </div>
 
         <!-- Ulap -->
@@ -315,14 +314,13 @@
                 </ul>
                 <p class="text-white font-semibold">Starting at ₱1.0M</p>
                 <button onclick="openOrderModal('ulap')" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-3 rounded-full">Order Now</button>
+                <div class="mt-3 flex items-center space-x-2 fade-section">
+                    <button onclick="toggleWaveform('ulap')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
+                        🔊 Hear the Engine
+                    </button>
+                    <canvas id="revpulse-ulap" width="150" height="60" class="rounded bg-neutral-900 border border-neutral-700 h-16"></canvas>
+                </div>
             </div>
-        </div>
-        <!-- Rev Pulse -->
-        <div class="mt-4 flex items-center space-x-2">
-            <button onclick="toggleWaveform('ulap')" class="bg-neutral-800 hover:bg-neutral-700 text-white px-3 py-1 rounded-full text-sm font-medium">
-                🔊 Hear the Engine
-            </button>
-            <canvas id="revpulse-ulap" width="150" height="50" class="rounded bg-neutral-900 border border-neutral-700"></canvas>
         </div>
 
     </section>
@@ -749,17 +747,17 @@
             document.getElementById('modalImage1').src = data.images[0];
 
             document.getElementById('modalSpecs').innerHTML = `
-                    <p><strong>Range:</strong> ${data.range}</p>
-                    ${data.accel ? `<p><strong>0-100 km/h:</strong> ${data.accel}</p>` : ''}
-                    <p><strong>Drive Type:</strong> ${data.drive}</p>
-                    <p><strong>Suspension:</strong> ${data.specs.suspension}</p>
-                    <p><strong>Transmission:</strong> ${data.specs.transmission}</p>
-                    <p><strong>Tires:</strong> ${data.specs.tires}</p>
+                        <p><strong>Range:</strong> ${data.range}</p>
+                        ${data.accel ? `<p><strong>0-100 km/h:</strong> ${data.accel}</p>` : ''}
+                        <p><strong>Drive Type:</strong> ${data.drive}</p>
+                        <p><strong>Suspension:</strong> ${data.specs.suspension}</p>
+                        <p><strong>Transmission:</strong> ${data.specs.transmission}</p>
+                        <p><strong>Tires:</strong> ${data.specs.tires}</p>
 `;
 
             const featuresList = data.features.map(item => `<li>• ${item}</li>`).join('');
             document.getElementById('modalSpecs').innerHTML += `
-                    <ul class="mt-4 space-y-1 text-sm text-gray-400">${featuresList}</ul>
+                        <ul class="mt-4 space-y-1 text-sm text-gray-400">${featuresList}</ul>
 `;
 
             const priceDisplay = document.getElementById('modalPrice');
@@ -849,7 +847,7 @@
                     const barWidth = canvas.width / bufferLength;
 
                     for (let i = 0; i < bufferLength; i++) {
-                        const barHeight = (dataArray[i] / 255) * canvas.height;
+                        const barHeight = ((dataArray[i] + 10) / 255) * canvas.height;
                         const x = i * barWidth;
 
                         ctx.fillStyle = '#38bdf8';
