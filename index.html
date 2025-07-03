@@ -775,18 +775,29 @@
             modal.classList.remove('flex');
         }
         const engineSounds = {};
+        let currentPlayingModel = null;
 
         function toggleEngineSound(model) {
+            // Pause currently playing sound if it's not the same
+            if (currentPlayingModel && currentPlayingModel !== model) {
+                engineSounds[currentPlayingModel]?.pause();
+                engineSounds[currentPlayingModel].currentTime = 0;
+            }
+
+            // Load if not loaded yet
             if (!engineSounds[model]) {
                 engineSounds[model] = new Audio(`${model}-sound.mp3`);
-                engineSounds[model].loop = false;
             }
 
             const audio = engineSounds[model];
+
             if (audio.paused) {
                 audio.play();
+                currentPlayingModel = model;
             } else {
                 audio.pause();
+                audio.currentTime = 0;
+                currentPlayingModel = null;
             }
         }
     </script>
