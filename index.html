@@ -122,6 +122,7 @@
                 transform: scale(1);
             }
         }
+
         #orderModal.flex #modalContent {
             opacity: 1;
             transform: scale(1);
@@ -237,7 +238,7 @@
                 </p>
                 <ul class="list-disc list-inside text-gray-300 mb-4">
                     <li>Range: 1000km</li>
-                    <li>0-100 km/h in 2.3s</li>
+                    <li>0-100 km/h in 4.8s</li>
                     <li>Sports-tuned suspension</li>
                     <li>Toyota Gazoo Racing collaboration</li>
                 </ul>
@@ -517,15 +518,19 @@
             <button onclick="closeOrderModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">&times;</button>
             <h2 id="modalTitle" class="text-2xl font-bold mb-4">Order H2X Model</h2>
 
+            <!-- Trim Selector -->
+            <div class="mb-4">
+                <label class="block text-sm mb-1 text-gray-400">Choose Trim</label>
+                <select id="trimSelect" class="w-full px-3 py-2 rounded bg-neutral-800 text-white"></select>
+            </div>
+
             <!-- Main Car Image -->
             <div class="mb-6">
                 <img id="modalImage1" src="" class="rounded-xl shadow-lg w-full h-auto object-cover" />
             </div>
 
             <!-- Specs and Description -->
-            <div id="modalSpecs" class="mb-6 text-gray-300 text-sm leading-relaxed space-y-2">
-                <!-- Filled dynamically -->
-            </div>
+            <div id="modalSpecs" class="mb-6 text-gray-300 text-sm leading-relaxed space-y-2"></div>
 
             <!-- Installment Plan Selector -->
             <div class="mb-6">
@@ -633,88 +638,198 @@
         const carData = {
             siklab: {
                 title: "Order H2X Siklab",
-                price: 2100000,
-                images: ["car-h2x.png"],
-                defaultPaint: "Racing Blue",
-                range: "1000km",
-                accel: "2.3s",
-                drive: "RWD",
-                specs: {
-                    suspension: "Race-tuned adaptive",
-                    transmission: "Seven-speed Sequential Stick gearbox",
-                    tires: "Michelin Pilot Sport 4S"
-                },
-                features: [
-                    "0–100 km/h in 2.3s",
-                    "Carbon-ceramic brakes",
-                    "1,200kg curb weight",
-                    "Track control system with drift mode",
-                    "Nürburgring Lap: 7:19"
+                trims: [
+                    {
+                        name: "Siklab",
+                        description: "Pure Hydro-electric performance coupe",
+                        price: 2100000,
+                        image: "car-h2x.png",
+                        range: "1000km",
+                        accel: "4.8",
+                        drive: "RWD",
+                        specs: {
+                            suspension: "Race-tuned adaptive",
+                            transmission: "Seven-speed Sequential Stick gearbox",
+                            tires: "Michelin Pilot Sport 4S"
+                        },
+                        features: [
+                            "0–100 km/h in 4.8s",
+                            "Carbon-ceramic brakes",
+                            "1,200kg curb weight",
+                            "Track control system with drift mode",
+                            "Nürburgring Lap: 8:43"
+                        ]
+                    },
+                    {
+                        name: "Siklab Premier",
+                        description: "Upgraded interior, adaptive suspension",
+                        price: 2400000,
+                        image: "car-h2x-P.png",
+                        range: "1000km",
+                        accel: "4.5s",
+                        drive: "RWD",
+                        specs: {
+                            suspension: "[placeholder]",
+                            transmission: "[placeholder]",
+                            tires: "[placeholder]"
+                        },
+                        features: ["[placeholder feature 1]", "[placeholder feature 2]"]
+                    },
+                    {
+                        name: "Siklab Apex-R",
+                        description: "Track-tuned by Brahminy Apex Racing",
+                        price: 2800000,
+                        image: "car-h2x-AR.png",
+                        range: "1000km",
+                        accel: "2.3s",
+                        drive: "RWD",
+                        specs: {
+                            suspension: "[placeholder]",
+                            transmission: "[placeholder]",
+                            tires: "[placeholder]"
+                        },
+                        features: ["[placeholder feature 1]", "[placeholder feature 2]"]
+                    }
                 ]
             },
             lakbay: {
                 title: "Order H2X Lakbay",
-                price: 1700000,
-                images: ["car-lakbay.png"],
-                defaultPaint: "Baja Bronze",
-                range: "1500km",
-                accel: null,
-                drive: "AWD",
-                specs: {
-                    suspension: "High-clearance hydro-adaptive",
-                    transmission: "Dual-range off-road capable",
-                    tires: "All-terrain Yokohama Geolandar"
-                },
-                features: [
-                    "Towing capacity: 2,000kg",
-                    "Cargo space: 1,500L",
-                    "Ground clearance: 240mm",
-                    "Selectable AWD / 4WD",
-                    "8-point crash safety system",
-                    "Built-in trail camera & off-road UI"
+                trims: [
+                    {
+                        name: "Lakbay",
+                        description: "Rugged AWD SUV",
+                        price: 1700000, image: "car-lakbay.png",
+                        range: "1500km", accel: null, drive: "AWD",
+                        specs: {
+                            suspension: "[placeholder]",
+                            transmission: "[placeholder]",
+                            tires: "[placeholder]"
+                        },
+                        features: ["[placeholder]"]
+                    },
+                    {
+                        name: "Lakbay Premier",
+                        description: "Luxury add-ons, terrain assist",
+                        price: 2000000, image: "car-lakbay-P.png",
+                        range: "1500km", accel: null, drive: "AWD",
+                        specs: {
+                            suspension: "[placeholder]",
+                            transmission: "[placeholder]",
+                            tires: "[placeholder]"
+                        },
+                        features: ["[placeholder]"]
+                    },
+                    {
+                        name: "Lakbay Apex-X",
+                        description: "Rally-tuned suspension, B.A.R upgrades",
+                        price: 2400000, image: "car-lakbay-AR.png",
+                        range: "1500km",
+                        accel: null, drive: "AWD",
+                        specs: {
+                            suspension: "[placeholder]",
+                            transmission: "[placeholder]",
+                            tires: "[placeholder]"
+                        },
+                        features: ["[placeholder]"]
+                    }
                 ]
             },
             bayan: {
                 title: "Order H2X Bayan",
-                price: 800000,
-                images: ["car-bayan.png"],
-                defaultPaint: "Midnight Blue",
-                range: "750km",
-                accel: null,
-                drive: "FWD",
-                specs: {
-                    suspension: "Comfort-optimized",
-                    transmission: "Single-speed EV drive",
-                    tires: "EcoGrip city radials"
-                },
-                features: [
-                    "5-star ASEAN NCAP safety rating",
-                    "Full driver-assist suite (adaptive cruise, lane keep)",
-                    "Steel-reinforced crash zones",
-                    "Rear parking camera with AI assistance",
-                    "Low maintenance, modular components"
+                trims: [
+                    {
+                        name: "Bayan",
+                        description: "Practical city car",
+                        price: 800000,
+                        image: "car-bayan.png",
+                        range: "750km",
+                        accel: null,
+                        drive: "FWD",
+                        specs: {
+                            suspension: "[placeholder]",
+                            transmission: "[placeholder]",
+                            tires: "[placeholder]"
+                        },
+                        features: ["[placeholder]"]
+                    },
+                    {
+                        name: "Bayan Plus",
+                        description: "Smoother suspension, better infotainment",
+                        price: 950000,
+                        image: "car-bayan-P.png",
+                        range: "750km",
+                        accel: null,
+                        drive: "FWD",
+                        specs: {
+                            suspension: "[placeholder]",
+                            transmission: "[placeholder]",
+                            tires: "[placeholder]"
+                        },
+                        features: ["[placeholder]"]
+                    },
+                    {
+                        name: "Bayan Sport",
+                        description: "Race Suspension, Aero Parts",
+                        price: 1100000,
+                        image: "car-bayan-AR.png",
+                        range: "750km",
+                        accel: null,
+                        drive: "FWD",
+                        specs: {
+                            suspension: "[placeholder]",
+                            transmission: "[placeholder]",
+                            tires: "[placeholder]"
+                        },
+                        features: ["[placeholder]"]
+                    }
                 ]
             },
             ulap: {
                 title: "Order H2X Ulap",
-                price: 1000000,
-                images: ["car-ulap.png"],
-                defaultPaint: "Pearl White",
-                range: "750km",
-                accel: null,
-                drive: "AWD",
-                specs: {
-                    suspension: "Active float-drive suspension",
-                    transmission: "Smooth dual-motor sync drive",
-                    tires: "Continental LuxuryTour"
-                },
-                features: [
-                    "Active float-drive suspension",
-                    "16-speaker 3D surround sound",
-                    "Auto climate and ambient lighting",
-                    "Smart drive modes (Comfort / Sport / Auto)",
-                    "Panoramic glass roof and large legroom",
-                    "Underfloor cargo storage"
+                trims: [
+                    {
+                        name: "Ulap",
+                        description: "Comfort crossover",
+                        price: 1000000, image: "car-ulap.png",
+                        range: "750km",
+                        accel: null,
+                        drive: "AWD",
+                        specs: {
+                            suspension: "[placeholder]",
+                            transmission: "[placeholder]",
+                            tires: "[placeholder]"
+                        },
+                        features: ["[placeholder]"]
+                    },
+                    {
+                        name: "Ulap Premier",
+                        description: "Luxury seating, AI comfort",
+                        price: 1300000, image: "car-ulap-P.png",
+                        range: "750km",
+                        accel: null,
+                        drive: "AWD",
+                        specs: {
+                            suspension: "[placeholder]",
+                            transmission: "[placeholder]",
+                            tires: "[placeholder]"
+                        },
+                        features: ["[placeholder]"]
+                    },
+                    {
+                        name: "Ulap Apex-Luxe",
+                        description: "B.A.R-tuned comfort, Apex dampers",
+                        price: 1600000,
+                        image: "car-ulap-AR.png",
+                        range: "750km",
+                        accel: null,
+                        drive: "AWD",
+                        specs: {
+                            suspension: "[placeholder]",
+                            transmission: "[placeholder]",
+                            tires: "[placeholder]"
+                        },
+                        features: ["[placeholder]"]
+                    }
                 ]
             }
         };
@@ -723,48 +838,45 @@
             return `₱${num.toLocaleString()}`;
         }
 
+        function updatePrice(basePrice, plan) {
+            let text = formatPesos(basePrice);
+            if (plan !== 'full') {
+                let months = parseInt(plan);
+                let monthly = basePrice / months;
+                if (plan === '24') monthly *= 1.05;
+                if (plan === '36') monthly *= 1.1;
+                text = `${formatPesos(Math.round(monthly))} / month`;
+            }
+            document.getElementById('modalPrice').innerText = text;
+        }
+
         function openOrderModal(model) {
             const modal = document.getElementById('orderModal');
             const data = carData[model];
-
-            document.getElementById('modalTitle').innerText = data.title;
-            document.getElementById('modalImage1').src = data.images[0];
-
-            document.getElementById('modalSpecs').innerHTML = `
-                <p><strong>Range:</strong> ${data.range}</p>
-                ${data.accel ? `<p><strong>0-100 km/h:</strong> ${data.accel}</p>` : ''}
-                <p><strong>Drive Type:</strong> ${data.drive}</p>
-                <p><strong>Suspension:</strong> ${data.specs.suspension}</p>
-                <p><strong>Transmission:</strong> ${data.specs.transmission}</p>
-                <p><strong>Tires:</strong> ${data.specs.tires}</p>
-`;
-
-            const featuresList = data.features.map(item => `<li>• ${item}</li>`).join('');
-            document.getElementById('modalSpecs').innerHTML += `
-                <ul class="mt-4 space-y-1 text-sm text-gray-400">${featuresList}</ul>
-`;
-
-            const priceDisplay = document.getElementById('modalPrice');
+            const trimSelect = document.getElementById('trimSelect');
             const planSelect = document.getElementById('installmentPlan');
 
-            function updatePrice() {
-                const plan = planSelect.value;
-                let text = formatPesos(data.price);
+            trimSelect.innerHTML = data.trims.map((trim, i) => `<option value="${i}">${trim.name} — ${trim.description}</option>`).join('');
 
-                if (plan !== 'full') {
-                    let months = parseInt(plan);
-                    let monthly = data.price / months;
-                    if (plan === '24') monthly *= 1.05;
-                    if (plan === '36') monthly *= 1.1;
-                    text = `${formatPesos(Math.round(monthly))} / month`;
-                }
-
-                priceDisplay.innerText = text;
+            function renderTrim(index) {
+                const trim = data.trims[index];
+                document.getElementById('modalTitle').innerText = `${data.title} – ${trim.name}`;
+                document.getElementById('modalImage1').src = trim.image;
+                document.getElementById('modalSpecs').innerHTML = `
+          <p><strong>Range:</strong> ${trim.range}</p>
+          ${trim.accel ? `<p><strong>0-100 km/h:</strong> ${trim.accel}</p>` : ''}
+          <p><strong>Drive Type:</strong> ${trim.drive}</p>
+          <p><strong>Suspension:</strong> ${trim.specs.suspension}</p>
+          <p><strong>Transmission:</strong> ${trim.specs.transmission}</p>
+          <p><strong>Tires:</strong> ${trim.specs.tires}</p>
+          <ul class="mt-4 space-y-1 text-sm text-gray-400">${trim.features.map(f => `<li>• ${f}</li>`).join('')}</ul>`;
+                updatePrice(trim.price, planSelect.value);
             }
 
-            planSelect.onchange = updatePrice;
-            updatePrice();
+            trimSelect.onchange = () => renderTrim(parseInt(trimSelect.value));
+            planSelect.onchange = () => renderTrim(parseInt(trimSelect.value));
 
+            renderTrim(0);
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         }
